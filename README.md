@@ -6,8 +6,7 @@
 - [Gabriel Souto](https://github.com/Inframan)
 - [José Cardoso](https://github.com/JoseCardoso)
 
-##T12
-###Coordenação inteligente de semáforos
+####Coordenação inteligente de semáforos
 
 ##Objetivo
 Explorar diferentes estratégias de coordenação de semáforos usando um Sistema MultiAgente.
