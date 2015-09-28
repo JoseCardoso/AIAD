@@ -1,6 +1,7 @@
 # AIAD
 
 ##Membros do Grupo:
+
 - [Diogo Soares] (https://github.com/diogoei12102)
 - [Gabriel Souto](https://github.com/Inframan)
 - [José Cardoso](https://github.com/JoseCardoso)
@@ -15,13 +16,16 @@ Explorar diferentes estratégias de coordenação de semáforos usando um Sistem
 O objetivo principal deste trabalho é testar estratégias de coordenação semafórica, a partir da
 configuração inteligente dos parâmetros associados à temporização das luzes, utilizando a
 metáfora dos agentes inteligentes.
+
 A partir de sensores, os agentes semáforos devem ter acesso ao volume de tráfego chegando à
 sua área de intervenção. Esta informação será utilizada para que o agente selecione o melhor
 plano semafórico a adotar. Diferentes estratégias devem ser testadas, nomeadamente:
   - a possibilidade de comunicação entre vários semáforos vizinhos, quer com o objetivo
 de enriquecer a circulação de informação entre os agentes, quer com vista a uma
 coordenação multi-agente mais eficaz;
+
   -a exploração de estratégias baseadas em mercado (ver artigo abaixo).
+  
 A análise da qualidade de cada estratégia poderá ser realizada através de medidas de
 desempenho tais como o tempo de espera nas filas, a velocidade média na rede, ou a razão
 entre veículos entrados e saídos.
