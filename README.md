@@ -1,12 +1,10 @@
-##AIAD
+#AIAD - Coordenação inteligente de semáforos
 
 ##Membros do Grupo:
 
 - [Diogo Soares] (https://github.com/diogoei12102)
 - [Gabriel Souto](https://github.com/Inframan)
 - [José Cardoso](https://github.com/JoseCardoso)
-
-#Coordenação inteligente de semáforos
 
 ##Objetivo
 Explorar diferentes estratégias de coordenação de semáforos usando um Sistema MultiAgente.
