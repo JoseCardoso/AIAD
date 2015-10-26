@@ -58,8 +58,7 @@ public class SumoCom {
 
 	public SumoCom(){
 		routesIDs = new ArrayList<String>();
-
-		vehicles = new ArrayList<SumoVehicle>();
+<>umoVehicle>();
 		polygons = new ArrayList<SumoPolygon>();
 		routes = new ArrayList<SumoRoute>();
 
