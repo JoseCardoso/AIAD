@@ -85,7 +85,7 @@ public class SumoCom {
 				command.addAll(params);
 			} else if (simulator == "guisim") {
 				if(OS.indexOf("win") >= 0){
-					command.add("sumo-gui.exe");
+					command.add("lib/sumo-gui.exe");
 				} else { //Assumed Unix based
 					command.add("sumo-gui");
 				}

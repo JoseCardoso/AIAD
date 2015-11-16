@@ -1,6 +1,8 @@
 package start;
 
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,7 +57,9 @@ public class Main {
 		//Create SUMO
 		Simulator sumo = new Sumo("guisim");
 		List<String> params = new ArrayList<String>();
-		params.add("-c=Map\\map.sumo.cfg");
+		Path currentRelativePath = Paths.get("");
+		String current_path = currentRelativePath.toAbsolutePath().toString();
+		params.add("-c="+current_path +"/bin/Maps/cross1l/cross1l.sumocfg");
 		sumo.addParameters(params);
 		sumo.addConnections("localhost", 8820);
 
