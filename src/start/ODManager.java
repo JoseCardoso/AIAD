@@ -27,7 +27,7 @@ public class ODManager extends Agent{
 
 	private boolean doneBehaviour = false;
 
-	private final int numDrivers = 500;
+	private final int numDrivers = 2;
 
 	protected boolean sentAccidentMessage = false;
 

@@ -28,7 +28,7 @@ public class SumoCom {
 
 	//Sumo connection
 	public Socket socket;
-	public String server;
+	public String server = "172.30.36.192";
 	public int port;
 
 	public Process proc;
