@@ -1,0 +1,14 @@
+Loading net-file from 'maps\TlMap\map.net.xml'...  done (15ms).
+Loading additional-files from 'maps\TlMap\map.vtypes.xml'...  done (0ms).
+Loading done.
+***Starting server on port 8820 ***
+Simulation started with time: 0.00
+Performance: 
+ Duration: 10893 ms
+ Real time factor: 0.954742
+ UPS: 0.000000
+Vehicles: 
+ Emitted: 0
+ Running: 0
+ Waiting: 0
+
