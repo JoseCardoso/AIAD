@@ -1,17 +1,14 @@
-Loading net-file from 'maps\manhattan10\net.net.xml'...  done (97ms).
+Loading net-file from 'maps\manhattan10\net.net.xml'...  done (95ms).
 Loading done.
 ***Starting server on port 8820 ***
 Error: The class for vType 'eme' is not known.
 Simulation started with time: 0.00
-Error: Answered with error to command 164: Vehicle '3' is not known
-Error: Answered with error to command 164: Vehicle '18' is not known
-Error: Answered with error to command 164: Vehicle '69' is not known
 Performance: 
- Duration: 29524 ms
- Real time factor: 12.5322
- UPS: 525.504674
+ Duration: 53538 ms
+ Real time factor: 2.09197
+ UPS: 29.810602
 Vehicles: 
- Emitted: 93 (Loaded: 143)
- Running: 79
+ Emitted: 28 (Loaded: 79)
+ Running: 28
  Waiting: 0
 

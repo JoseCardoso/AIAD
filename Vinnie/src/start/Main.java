@@ -48,7 +48,7 @@ public class Main {
 		// Create SUMO
 		Sumo sumo = new Sumo("guisim");
 		List<String> params = new ArrayList<String>();
-		params.add("-c=maps\\manhattan10\\file.sumocfg");
+		params.add("-c=maps\\manhattan3\\file.sumocfg");
 		sumo.addParameters(params);
 		sumo.addConnections("127.0.0.1", 8820);
 
@@ -60,8 +60,8 @@ public class Main {
 
 		api.connect();
 		AgentManager manager = new AgentManager(sumo, mainContainer);
+		manager.initSemaphores();
 		manager.startSemaphores();
-		
 		api.start();
 
 		while (true) {

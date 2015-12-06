@@ -6,6 +6,7 @@ import java.util.Random;
 
 
 import jade.wrapper.ContainerController;
+import jade.wrapper.ControllerException;
 import jade.wrapper.StaleProxyException;
 import trasmapi.sumo.Sumo;
 import trasmapi.sumo.SumoCom;
@@ -16,13 +17,13 @@ public class AgentManager {
 	ContainerController mainContainer;
 	private final int numDrivers = 25;
 	ArrayList<SemaphoreAgent> agents = new ArrayList<>();
-
+	
 	public AgentManager(Sumo sumo, ContainerController mainContainer) {
 		this.sumo = sumo;
 		this.mainContainer = mainContainer;
 	}
 
-	public void startSemaphores() {
+	public void initSemaphores() {
 		ArrayList<String> semaphoreIDS = SumoTrafficLight.getIdList();
 		for (int i = 0; i < semaphoreIDS.size(); i++) {
 			SumoTrafficLight semaphore = new SumoTrafficLight(semaphoreIDS.get(i));
@@ -35,7 +36,7 @@ public class AgentManager {
 				String neighbour= controlledLanes.listIterator(j).next().split("to")[0];
 				adjacentSemaphores.add(neighbour);
 			}
-			SemaphoreAgent agent = new SemaphoreAgent(semaphoreIDS.get(i));
+			SemaphoreAgent agent = new SemaphoreAgent(sumo, semaphoreIDS.get(i));
 			HashSet<String> agentSet = new HashSet<String>();
 			agentSet.addAll(adjacentSemaphores);
 			
@@ -52,5 +53,21 @@ public class AgentManager {
 		}
 	}
 
+	public void startSemaphores()
+	{
+		for(int i = 0; i < agents.size();i++)
+		{
+			try {
+				mainContainer.getAgent(agents.listIterator(i).next().getLocalName()).start();
+			} catch (StaleProxyException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ControllerException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
 
 }

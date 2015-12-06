@@ -3,23 +3,29 @@ package agents;
 
 import java.util.HashSet;
 
-public class SemaphoreAgent extends jade.core.Agent {
+import trasmapi.sumo.Sumo;
+
+public class SemaphoreAgent extends jade.core.Agent{
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	String ID;
 	private HashSet<String> adjacents;
-
-	public SemaphoreAgent(String string) {
+	private Sumo sumo;
+	
+	public SemaphoreAgent(Sumo sumo, String string) {
 		super();
 		ID = string;
+		this.sumo = sumo;
+		
+		new Thread(new SemaphoreThread(sumo, this)).start();
 	}
 
 	public void setup() {
 		// esta funo inicializa o semaforo
-		System.out.println("SEMAFORO INICIALIZADO  " + ID);
+		//	System.out.println("SEMAFORO INICIALIZADO  " + ID);
 	}
 
 	public HashSet<String> getAdjacents() {
@@ -30,6 +36,6 @@ public class SemaphoreAgent extends jade.core.Agent {
 		this.adjacents = adjacents;
 	}
 
-	
-	
+
+
 }
