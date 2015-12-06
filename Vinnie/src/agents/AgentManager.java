@@ -1,4 +1,4 @@
-package start;
+package agents;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -26,38 +26,31 @@ public class AgentManager {
 		ArrayList<String> semaphoreIDS = SumoTrafficLight.getIdList();
 		for (int i = 0; i < semaphoreIDS.size(); i++) {
 			SumoTrafficLight semaphore = new SumoTrafficLight(semaphoreIDS.get(i));
-			//ArrayList<String> lanes = semaphore.getControlledLanes();
-			// ArrayList<String> adjacentSemaphores= new ArrayList<>();
+			ArrayList<String> controlledLanes = semaphore.getControlledLanes();
+			HashSet<String>  adjacentSemaphores= new HashSet<String>();
+
+
+			for(int j = 0; j < controlledLanes.size(); j++)
+			{
+				String neighbour= controlledLanes.listIterator(j).next().split("to")[0];
+				adjacentSemaphores.add(neighbour);
+			}
 			SemaphoreAgent agent = new SemaphoreAgent(semaphoreIDS.get(i));
-			try {
+			HashSet<String> agentSet = new HashSet<String>();
+			agentSet.addAll(adjacentSemaphores);
+			
+			agent.setAdjacents(adjacentSemaphores);
+			
+				try {
 				agents.add(agent);
-				mainContainer.acceptNewAgent("TrafficLight-" + semaphoreIDS.get(i), agent);
+				mainContainer.acceptNewAgent("Semaphore-" + semaphoreIDS.get(i), agent);
 			}catch(Exception e){
 				e.printStackTrace();
 			}
-		
-			
+
+
 		}
 	}
 
-	public void addDrivers() {
-
-		SumoCom.createAllRoutes();
-
-		DriverAgent.rand = new Random(423423);
-
-		try {
-
-			for (int i = 0; i < numDrivers; i++)
-				mainContainer.acceptNewAgent("DRIVER#" + i, new DriverAgent(i)).start();
-
-			// AccidentGUI accident = new AccidentGUI(numDrivers);
-			// accident.setVisible(true);
-
-		} catch (StaleProxyException e) {
-			e.printStackTrace();
-		}
-
-	}
 
 }

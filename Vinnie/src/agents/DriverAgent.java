@@ -1,4 +1,4 @@
-package start;
+package agents;
 
 import java.util.Random;
 

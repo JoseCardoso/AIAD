@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import agents.AgentManager;
+
 public class Main {
 
 	static boolean JADE_GUI = true;
