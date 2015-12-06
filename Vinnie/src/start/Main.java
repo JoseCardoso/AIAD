@@ -1,5 +1,5 @@
-package acer;
-import agents.sumo.AgentsManager;
+package start;
+
 import jade.BootProfileImpl;
 import jade.core.ProfileImpl;
 import jade.core.Runtime;

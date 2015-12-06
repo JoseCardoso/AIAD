@@ -1,4 +1,4 @@
-package acer;
+package start;
 
 public class SemaphoreAgent extends jade.core.Agent {
 	String ID;
