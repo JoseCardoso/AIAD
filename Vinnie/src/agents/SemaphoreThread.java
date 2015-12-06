@@ -16,6 +16,7 @@ public class SemaphoreThread implements Runnable {
 	public void run() {
 		boolean position = true;
 		SumoTrafficLight semaphore = new SumoTrafficLight(agent.ID);
+		int i = 0;
 		while (true) {
 			// states of all semaphores
 			if (agent.getAdjacents().size() == 4 && position) {
@@ -31,7 +32,16 @@ public class SemaphoreThread implements Runnable {
 				semaphore.setState("gGrrgG");
 			}
 			try {
-				Thread.sleep(200);
+				Thread.sleep(2);
+				i++;
+				if(i > 25)
+					position = false;
+				if(i >50)
+				{
+					i = 0;
+					position = true;
+				}
+				
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
