@@ -1,4 +1,4 @@
-package agents;
+package start;
 
 import java.util.Random;
 
@@ -6,10 +6,7 @@ import trasmapi.genAPI.Edge;
 import trasmapi.genAPI.Vehicle;
 import trasmapi.genAPI.exceptions.UnimplementedMethod;
 import trasmapi.sumo.SumoCom;
-import trasmapi.sumo.SumoEdge;
-import trasmapi.sumo.SumoRoute;
 import trasmapi.sumo.SumoVehicle;
-
 import jade.core.Agent;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.CyclicBehaviour;

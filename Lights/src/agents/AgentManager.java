@@ -2,20 +2,17 @@ package agents;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Random;
 
 
 import jade.wrapper.ContainerController;
 import jade.wrapper.ControllerException;
 import jade.wrapper.StaleProxyException;
 import trasmapi.sumo.Sumo;
-import trasmapi.sumo.SumoCom;
 import trasmapi.sumo.SumoTrafficLight;
 
 public class AgentManager {
 	Sumo sumo;
 	ContainerController mainContainer;
-	private final int numDrivers = 25;
 	ArrayList<SemaphoreAgent> agents = new ArrayList<>();
 	
 	public AgentManager(Sumo sumo, ContainerController mainContainer) {
@@ -36,7 +33,7 @@ public class AgentManager {
 				String neighbour= controlledLanes.listIterator(j).next().split("to")[0];
 				adjacentSemaphores.add(neighbour);
 			}
-			SemaphoreAgent agent = new SemaphoreAgent(sumo, semaphoreIDS.get(i));
+			SemaphoreAgent agent = new SemaphoreAgent( semaphoreIDS.get(i));
 			HashSet<String> agentSet = new HashSet<String>();
 			agentSet.addAll(adjacentSemaphores);
 			

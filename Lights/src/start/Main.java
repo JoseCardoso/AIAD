@@ -26,11 +26,6 @@ public class Main {
 	public static void main(String[] args)
 			throws UnimplementedMethod, InterruptedException, IOException, TimeoutException {
 
-		// if (args.length != 1) {
-		// System.err.println("Provide a map path");
-		// System.exit(1);
-		// }
-
 		if (JADE_GUI) {
 			List<String> params = new ArrayList<String>();
 			params.add("-gui");
@@ -44,7 +39,6 @@ public class Main {
 
 		// Init TraSMAPI framework
 		TraSMAPI api = new TraSMAPI();
-		// String map = args[0];
 		// Create SUMO
 		Sumo sumo = new Sumo("guisim");
 		List<String> params = new ArrayList<String>();
@@ -57,7 +51,6 @@ public class Main {
 
 		// Launch and Connect all the simulators added
 		api.launch();
-
 		api.connect();
 		AgentManager manager = new AgentManager(sumo, mainContainer);
 		manager.initSemaphores();

@@ -2,7 +2,6 @@ package start;
 
 import java.util.Random;
 
-import agents.DriverAgent;
 import trasmapi.sumo.SumoCom;
 
 import jade.core.AID;
