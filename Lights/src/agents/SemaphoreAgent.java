@@ -4,7 +4,9 @@ package agents;
 import java.util.HashSet;
 
 import trasmapi.sumo.Sumo;
+import trasmapi.sumo.SumoLane;
 import trasmapi.sumo.SumoTrafficLight;
+import trasmapi.sumo.SumoVehicle;
 
 public class SemaphoreAgent extends jade.core.Agent{
 	/**
@@ -73,14 +75,38 @@ public class SemaphoreAgent extends jade.core.Agent{
 					yellow = true;
 
 				}
-
+				
+				SumoLane lane = new SumoLane(semaphore.getControlledLanes().listIterator(0).next());
+				int stopped = getStoppedVehicles(lane);
+				System.out.println("Stopped cars in lane "+semaphore.getControlledLanes().listIterator(0).next()+" are: "+stopped);
+				
+					
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			
+			//for(int i = 0; i < )
+			
 		}
 	}
 
+	private int getStoppedVehicles(SumoLane lane)
+	{
+		SumoVehicle[] vehicles = lane.vehiclesList();
+		int stopped = 0;
+		
+		for(int k = 0; k < vehicles.length;k++)
+		{
+			if(vehicles[k].getSpeed() == 0.0)
+				stopped++;
+		}
+		
+		
+		return stopped;
+	}
+	
+	
 	private String generateState(boolean position, boolean yellow) {
 		String Str = "";
 		int column = Integer.parseInt(ID.split("/")[0]);
