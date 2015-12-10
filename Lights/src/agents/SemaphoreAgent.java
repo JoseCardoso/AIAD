@@ -78,7 +78,7 @@ public class SemaphoreAgent extends jade.core.Agent{
 				
 				SumoLane lane = new SumoLane(semaphore.getControlledLanes().listIterator(0).next());
 				int stopped = getStoppedVehicles(lane);
-				System.out.println("Stopped cars in lane "+semaphore.getControlledLanes().listIterator(0).next()+" are: "+stopped);
+				//System.out.println("Stopped cars in lane "+semaphore.getControlledLanes().listIterator(0).next()+" are: "+stopped);
 				
 					
 			} catch (InterruptedException e) {
@@ -98,8 +98,9 @@ public class SemaphoreAgent extends jade.core.Agent{
 		
 		for(int k = 0; k < vehicles.length;k++)
 		{
-			if(vehicles[k].getSpeed() == 0.0)
-				stopped++;
+			if(vehicles[k].alive)//may not be alive
+				if(vehicles[k].getSpeed() == 0.0)
+					stopped++;
 		}
 		
 		
