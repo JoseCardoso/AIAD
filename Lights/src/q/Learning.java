@@ -1,6 +1,7 @@
 package q;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Learning {
 
@@ -76,23 +77,35 @@ public class Learning {
 	
 	public int getAction(int state)
 	{
-		int action = 0;
+		
+		int bestAction = getBestAction(state);
+		double numerator = Math.exp(bestAction)/temperature;
+		double denominator = 0.0;
+		double prob = 0.0;
+		double choice = Math.random();
 		
 		for(int i = 0; i < qTable.size();i++)
 		{
-			
-			if(qTable.listIterator(i).next()[0] == state )
-			{
-				
-			}
-			
+			denominator	+= 	Math.exp(qTable.listIterator(i).next()[1])/temperature;	
 		}
 		
+		prob = numerator/denominator;
 		
-		return action;
+
+		
+		if(choice < prob)
+			return bestAction;
+		else
+			return randomAction();
 	}
 	
-	private double getBestAction(int state)
+	//gera acções entre 0 e 2 (0 descresce, 1 mantém e 2 sobe o tempo verde)
+	private int randomAction() {
+		// TODO Auto-generated method stub		
+		return (int)(Math.random() * 2 );
+	}
+
+	private int getBestAction(int state)
 	{
 		double bestAction = 0;
 		double bestQuality = 0;
@@ -106,7 +119,7 @@ public class Learning {
 		}
 		
 		
-		return bestAction;
+		return (int) bestAction;
 	}
 	
 	
