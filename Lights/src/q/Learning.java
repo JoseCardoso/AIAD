@@ -3,6 +3,7 @@ package q;
 import java.util.ArrayList;
 import java.util.Random;
 
+import javax.print.attribute.standard.RequestingUserName;
 public class Learning {
 
 	// 0 < alfa <= 1
@@ -63,8 +64,8 @@ public class Learning {
 			quality = learning_rate*reforce;
 			Double[] estado = new Double[3];
 			estado[0] = (double) state;
-			estado[0] = (double) action;
-			estado[0] = quality;
+			estado[1] = (double) action;
+			estado[2] = quality;
 			qTable.add(estado);
 		}
 		
@@ -77,7 +78,7 @@ public class Learning {
 	
 	public int getAction(int state)
 	{
-		
+		int a;
 		int bestAction = getBestAction(state);
 		double numerator = Math.exp(bestAction)/temperature;
 		double denominator = 0.0;
@@ -86,23 +87,29 @@ public class Learning {
 		
 		for(int i = 0; i < qTable.size();i++)
 		{
+			//Double[] cenas = qTable.listIterator(i).next();
+			//System.out.println(cenas);
 			denominator	+= 	Math.exp(qTable.listIterator(i).next()[1])/temperature;	
 		}
 		
+		
 		prob = numerator/denominator;
 		
-
 		
-		if(choice < prob)
+		
+	/*	if(choice < prob && denominator> 0)//para prob não dar infinito
 			return bestAction;
 		else
-			return randomAction();
+		*/	
+		return randomAction();
 	}
 	
-	//gera acções entre 0 e 2 (0 descresce, 1 mantém e 2 sobe o tempo verde)
+	//gera acções entre 0 e 2 (-1 descresce, 0 mantém e 1 sobe o tempo verde)
 	private int randomAction() {
 		// TODO Auto-generated method stub		
-		return (int)(Math.random() * 2 );
+		Random r = new Random();
+		int rand = r.nextInt(3)-1;
+		return rand;
 	}
 
 	private int getBestAction(int state)
