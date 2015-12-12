@@ -53,7 +53,7 @@ public class Main {
 		api.launch();
 		api.connect();
 		AgentManager manager = new AgentManager(sumo, mainContainer);
-		manager.initSemaphores(true);
+		manager.initSemaphores(false);
 		manager.startSemaphores();
 		api.start();
 

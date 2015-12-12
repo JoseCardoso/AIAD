@@ -37,7 +37,7 @@ public class AgentManager {
 			if(learning)
 				agent = new LearningSemaphore( semaphoreIDS.get(i));
 			else
-				agent = new SemaphoreAgent( semaphoreIDS.get(i));
+				agent = new MessageSemaphore( semaphoreIDS.get(i));
 			
 			HashSet<String> agentSet = new HashSet<String>();
 			agentSet.addAll(adjacentSemaphores);

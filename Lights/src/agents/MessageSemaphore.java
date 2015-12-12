@@ -1,32 +1,46 @@
 package agents;
 
-
 import java.util.HashSet;
+import java.util.Iterator;
 
-
+import jade.core.AID;
+import jade.core.behaviours.TickerBehaviour;
+import jade.lang.acl.ACLMessage;
 import trasmapi.sumo.SumoTrafficLight;
 
-public class SemaphoreAgent extends Semaphore{
+public class MessageSemaphore extends Semaphore {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
 	String ID;
+	RequestServer server;
 	private HashSet<String> adjacents;
-	
-	public SemaphoreAgent( String string) {
+	public MessageSemaphore( String string) {
 		super();
 		ID = string;
+		server = new RequestServer(this);
 		
 	}
 
 	public void setup() {
+		
+
+		if (ID.equals("1/0")){
+		ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
+		 for (Iterator<String> it = adjacents.iterator(); it.hasNext(); ) {
+		        String f = it.next();
+		        
+		        msg.addReceiver(new AID("Semaphore-" + f, AID.ISLOCALNAME));
+		    }
+		msg.setContent("Teste");
+		send(msg);
+
+		}
 		executeSemaphore();
-		// esta funo inicializa o semaforo
+		
 		//	System.out.println("SEMAFORO INICIALIZADO  " + ID);
 	}
-
 	public HashSet<String> getAdjacents() {
 		return adjacents;
 	}
@@ -74,8 +88,8 @@ public class SemaphoreAgent extends Semaphore{
 
 				}
 				
-				//SumoLane lane = new SumoLane(semaphore.getControlledLanes().listIterator(0).next());
-				//int stopped = getStoppedVehicles(lane);
+//				SumoLane lane = new SumoLane(semaphore.getControlledLanes().listIterator(0).next());
+//				int stopped = getStoppedVehicles(lane);
 				//System.out.println("Stopped cars in lane "+semaphore.getControlledLanes().listIterator(0).next()+" are: "+stopped);
 				
 					
@@ -103,8 +117,8 @@ public class SemaphoreAgent extends Semaphore{
 		
 		
 		return stopped;
-	}
-	*/
+	}*/
+	
 	
 	private String generateState(boolean position, boolean yellow) {
 		String Str = "";
@@ -162,5 +176,3 @@ public class SemaphoreAgent extends Semaphore{
 	}
 
 }
-
-
