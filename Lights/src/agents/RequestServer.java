@@ -9,22 +9,21 @@ public class RequestServer extends CyclicBehaviour {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public RequestServer(Semaphore agent) {
-		super(agent);
-		//this.agent = agent;
-	}
 
+	@Override
 	public void action() {
-		System.out.println("action");
 		ACLMessage msg = myAgent.receive();
 		if (msg != null) {
-			// Message received. Process it
 			String message = msg.getContent();
-			System.out.println(message);
+			if(message.equals("Emergency")){
+				System.out.println("Emergency Vehicle Waiting");
+			}
+			else if(message.equals("Public")){
+				System.out.println("Public Vehicle Waiting");
+			}
 
 		}
-		else 
-			block();
-
 	}
+	
+
 }
