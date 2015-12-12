@@ -8,7 +8,7 @@ import trasmapi.sumo.SumoLane;
 import trasmapi.sumo.SumoTrafficLight;
 import trasmapi.sumo.SumoVehicle;
 
-public class SemaphoreAgent extends jade.core.Agent{
+public class SemaphoreAgent extends Semaphore{
 	/**
 	 * 
 	 */

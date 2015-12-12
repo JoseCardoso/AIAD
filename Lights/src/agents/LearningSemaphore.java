@@ -8,7 +8,7 @@ import trasmapi.sumo.SumoLane;
 import trasmapi.sumo.SumoTrafficLight;
 import trasmapi.sumo.SumoVehicle;
 
-public class LearningSemaphore extends jade.core.Agent{
+public class LearningSemaphore extends Semaphore{
 	/**
 	 * 
 	 */
@@ -28,7 +28,7 @@ public class LearningSemaphore extends jade.core.Agent{
 		ID = string;
 		greenTime1 = 30;
 		greenTime2 = 30;
-		yellowTime = 5;
+		yellowTime = 2;
 		qLearn1 = new Learning();
 		qLearn2 = new Learning();
 
@@ -55,6 +55,7 @@ public class LearningSemaphore extends jade.core.Agent{
 		SumoTrafficLight semaphore = new SumoTrafficLight(ID);
 		int i = 0;
 		while (true) {
+			int laneCounter= 0;
 			// states of all semaphores
 			if (getAdjacents().size() == 4 && position) {
 				if (!yellow)
@@ -76,20 +77,30 @@ public class LearningSemaphore extends jade.core.Agent{
 				i++;
 				if (i > greenTime2 + yellowTime*2 + greenTime1) {
 					i = 0;
+					laneCounter =0;
 					position = true;
 					yellow = false;
-					SumoLane lane1 = new SumoLane(semaphore.getControlledLanes().listIterator(0).next());
-					int stopped = getStoppedVehicles(lane1);
-					if(getAdjacents().size() == 4 )
-					{
-						SumoLane lane2 = new SumoLane(semaphore.getControlledLanes().listIterator(2).next());
-						stopped += getStoppedVehicles(lane2);
+					SumoLane lane;
+					int stopped = 0;
+					if (existAdjacent(0 ,1)){
+						lane = new SumoLane(semaphore.getControlledLanes().listIterator(laneCounter).next());
+					stopped += getStoppedVehicles(lane);
+					laneCounter++;
+						}
+					if (existAdjacent(1 ,0)){
+						laneCounter ++ ;
 					}
+					if (existAdjacent(0 ,-1)){
+						lane = new SumoLane(semaphore.getControlledLanes().listIterator(laneCounter).next());
+					stopped += getStoppedVehicles(lane);
+						
+					}
+					
 
 					qLearn2.updateTable(greenTime2, action2, stopped);
 
 					action2=qLearn2.getAction(greenTime2);
-					updateGreenTime(1, qLearn1.getAction(greenTime1));
+					updateGreenTime(1, action1);
 
 					updateQtable = true;
 				} else if (i > greenTime2 + greenTime1 + yellowTime) {
@@ -108,18 +119,32 @@ public class LearningSemaphore extends jade.core.Agent{
 					yellow = true;
 
 					if(updateQtable)
-					{
-						SumoLane lane1 = new SumoLane(semaphore.getControlledLanes().listIterator(0).next());
-						SumoLane lane2 = new SumoLane(semaphore.getControlledLanes().listIterator(2).next());
-						int stopped = getStoppedVehicles(lane1);
-						stopped += getStoppedVehicles(lane2);
-
+					{	laneCounter =0;
+						SumoLane lane;
+						int stopped = 0;
+						if (existAdjacent(0,1)){
+							laneCounter++;
+						}	
+						if (existAdjacent(1 ,0)){
+							lane = new SumoLane(semaphore.getControlledLanes().listIterator(laneCounter).next());
+						stopped += getStoppedVehicles(lane);
+						laneCounter++;
+							}
+						if (existAdjacent(0 ,-1)){
+							laneCounter ++ ;
+						}
+						if (existAdjacent(-1 ,0)){
+							lane = new SumoLane(semaphore.getControlledLanes().listIterator(laneCounter).next());
+						stopped += getStoppedVehicles(lane);
+							
+						}
+						
 						qLearn1.updateTable(greenTime1, action1, stopped);
 
 						action1 = qLearn1.getAction(greenTime1);
 
 
-						updateGreenTime(2, qLearn2.getAction(greenTime2));
+						updateGreenTime(2, action2);
 
 						updateQtable = false;
 					}
@@ -222,7 +247,15 @@ public class LearningSemaphore extends jade.core.Agent{
 
 		return Str.toString();
 	}
-
+private boolean existAdjacent(int x , int y){
+	int column = Integer.parseInt(ID.split("/")[0]);
+	int line = Integer.parseInt(ID.split("/")[1]);
+	String test = Integer.toString(column + x) + "/" + Integer.toString(line + y);
+	if (getAdjacents().contains(test)) {
+		return true;
+	}
+	return false;
+}
 }
 
 

@@ -13,15 +13,14 @@ import trasmapi.sumo.SumoTrafficLight;
 public class AgentManager {
 	Sumo sumo;
 	ContainerController mainContainer;
-	//ArrayList<SemaphoreAgent> agents = new ArrayList<>();
-	ArrayList<LearningSemaphore> agents = new ArrayList<>();
+	ArrayList<Semaphore> agents = new ArrayList<>();
 	
 	public AgentManager(Sumo sumo, ContainerController mainContainer) {
 		this.sumo = sumo;
 		this.mainContainer = mainContainer;
 	}
 
-	public void initSemaphores() {
+	public void initSemaphores(boolean learning) {
 		ArrayList<String> semaphoreIDS = SumoTrafficLight.getIdList();
 		for (int i = 0; i < semaphoreIDS.size(); i++) {
 			SumoTrafficLight semaphore = new SumoTrafficLight(semaphoreIDS.get(i));
@@ -34,8 +33,12 @@ public class AgentManager {
 				String neighbour= controlledLanes.listIterator(j).next().split("to")[0];
 				adjacentSemaphores.add(neighbour);
 			}
-			//SemaphoreAgent agent = new SemaphoreAgent( semaphoreIDS.get(i));´
-			LearningSemaphore agent = new LearningSemaphore( semaphoreIDS.get(i));
+			Semaphore agent;
+			if(learning)
+				agent = new LearningSemaphore( semaphoreIDS.get(i));
+			else
+				agent = new SemaphoreAgent( semaphoreIDS.get(i));
+			
 			HashSet<String> agentSet = new HashSet<String>();
 			agentSet.addAll(adjacentSemaphores);
 			
