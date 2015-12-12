@@ -10,15 +10,8 @@ public class SemaphoreAgent extends Semaphore{
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
-
-	String ID;
-	private HashSet<String> adjacents;
-	
 	public SemaphoreAgent( String string) {
-		super();
-		ID = string;
-		
+		super(string);
 	}
 
 	public void setup() {
@@ -26,14 +19,8 @@ public class SemaphoreAgent extends Semaphore{
 		// esta funo inicializa o semaforo
 		//	System.out.println("SEMAFORO INICIALIZADO  " + ID);
 	}
-
-	public HashSet<String> getAdjacents() {
-		return adjacents;
-	}
-
-	public void setAdjacents(HashSet<String> adjacents) {
-		this.adjacents = adjacents;
-	}
+	
+	
 	public void executeSemaphore() {
 		boolean position = true, yellow = false;
 		SumoTrafficLight semaphore = new SumoTrafficLight(ID);
@@ -105,62 +92,6 @@ public class SemaphoreAgent extends Semaphore{
 		return stopped;
 	}
 	*/
-	
-	private String generateState(boolean position, boolean yellow) {
-		String Str = "";
-		int column = Integer.parseInt(ID.split("/")[0]);
-		int line = Integer.parseInt(ID.split("/")[1]);
-		String upper = Integer.toString(column) + "/" + Integer.toString(line + 1);
-		String righter = Integer.toString(column + 1) + "/" + Integer.toString(line);
-		String below = Integer.toString(column) + "/" + Integer.toString(line - 1);
-		String lefter = Integer.toString(column - 1) + "/" + Integer.toString(line);
-		if (position) {
-			if (getAdjacents().contains(upper)) {
-				if (!yellow)
-					Str+="Gg";
-				else
-					Str+="yy";
-			}
-			if (getAdjacents().contains(righter)) {
-				Str+="rr";
-			}
-			if (getAdjacents().contains(below)) {
-				if (!yellow)
-					Str+="gG";
-				else
-					Str+="yy";
-
-			}
-			if (getAdjacents().contains(lefter)) {
-				Str+="rr";
-			}
-		} else {
-			if (getAdjacents().contains(upper)) {
-				Str+="rr";
-
-			}
-			if (getAdjacents().contains(righter)) {
-				if (!yellow)
-					Str+="Gg";
-				else
-					Str+="yy";
-			}
-			if (getAdjacents().contains(below)) {
-
-				Str+="rr";
-
-			}
-			if (getAdjacents().contains(lefter)) {
-				if (!yellow)
-					Str+="gG";
-				else
-					Str+="yy";
-			}
-		}
-
-		return Str.toString();
-	}
-
 }
 
 
