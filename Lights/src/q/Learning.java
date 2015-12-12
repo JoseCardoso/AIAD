@@ -97,11 +97,10 @@ public class Learning {
 		
 		
 		
-	/*	if(choice < prob && denominator> 0)//para prob não dar infinito
+		if(choice < prob && denominator> 0)//para prob não dar infinito
 			return bestAction;
-		else
-		*/	
-		return randomAction();
+		else	
+			return randomAction();
 	}
 	
 	//gera acções entre 0 e 2 (-1 descresce, 0 mantém e 1 sobe o tempo verde)
