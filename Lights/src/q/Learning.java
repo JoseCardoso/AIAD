@@ -103,11 +103,11 @@ public class Learning {
 			return randomAction();
 	}
 	
-	//gera acções entre 0 e 2 (-1 descresce, 0 mantém e 1 sobe o tempo verde)
+	//gera acções entre 0 e 8 ( descresce, 0 mantém e 1 sobe o tempo verde)
 	private int randomAction() {
 		// TODO Auto-generated method stub		
 		Random r = new Random();
-		int rand = r.nextInt(3)-1;
+		int rand = r.nextInt(8);
 		return rand;
 	}
 

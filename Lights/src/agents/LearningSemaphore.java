@@ -19,9 +19,9 @@ public class LearningSemaphore extends Semaphore{
 
 	private int greenTime1, greenTime2, yellowTime;
 
-	private Learning qLearn1, qLearn2;
+	private Learning qLearn;
 
-	private int action1, action2;
+	private int action;
 
 	public LearningSemaphore( String string) {
 		super();
@@ -29,11 +29,10 @@ public class LearningSemaphore extends Semaphore{
 		greenTime1 = 30;
 		greenTime2 = 30;
 		yellowTime = 2;
-		qLearn1 = new Learning();
-		qLearn2 = new Learning();
+		qLearn = new Learning();
 
 		//assumindo que se manteve no início
-		action1 = action2 = 0;
+		action = -1;
 	}
 
 	public void setup() {
@@ -53,6 +52,7 @@ public class LearningSemaphore extends Semaphore{
 		boolean position = true, yellow = false;
 		boolean updateQtable = true;
 		SumoTrafficLight semaphore = new SumoTrafficLight(ID);
+		int stopped =0;
 		int i = 0;
 		while (true) {
 			int laneCounter= 0;
@@ -81,28 +81,28 @@ public class LearningSemaphore extends Semaphore{
 					position = true;
 					yellow = false;
 					SumoLane lane;
-					int stopped = 0;
 					if (existAdjacent(0 ,1)){
 						lane = new SumoLane(semaphore.getControlledLanes().listIterator(laneCounter).next());
-					stopped += getStoppedVehicles(lane);
-					laneCounter++;
-						}
+						stopped += getStoppedVehicles(lane);
+						laneCounter++;
+					}
 					if (existAdjacent(1 ,0)){
 						laneCounter ++ ;
 					}
 					if (existAdjacent(0 ,-1)){
 						lane = new SumoLane(semaphore.getControlledLanes().listIterator(laneCounter).next());
-					stopped += getStoppedVehicles(lane);
-						
+						stopped += getStoppedVehicles(lane);
+
 					}
-					
 
-					qLearn2.updateTable(greenTime2, action2, stopped);
 
-					action2=qLearn2.getAction(greenTime2);
-					updateGreenTime(1, action1);
+					qLearn.updateTable(greenTime2, action, stopped);
+
+					action=qLearn.getAction(greenTime2);
+					updateGreenTime(action);
 
 					updateQtable = true;
+					stopped = 0;//reset stoppped vehicles
 				} else if (i > greenTime2 + greenTime1 + yellowTime) {
 					yellow = true;
 
@@ -118,35 +118,28 @@ public class LearningSemaphore extends Semaphore{
 
 					yellow = true;
 
+					//updates stopped vehicles
 					if(updateQtable)
 					{	laneCounter =0;
-						SumoLane lane;
-						int stopped = 0;
-						if (existAdjacent(0,1)){
-							laneCounter++;
-						}	
-						if (existAdjacent(1 ,0)){
-							lane = new SumoLane(semaphore.getControlledLanes().listIterator(laneCounter).next());
+					SumoLane lane;
+					if (existAdjacent(0,1)){
+						laneCounter++;
+					}	
+					if (existAdjacent(1 ,0)){
+						lane = new SumoLane(semaphore.getControlledLanes().listIterator(laneCounter).next());
 						stopped += getStoppedVehicles(lane);
 						laneCounter++;
-							}
-						if (existAdjacent(0 ,-1)){
-							laneCounter ++ ;
-						}
-						if (existAdjacent(-1 ,0)){
-							lane = new SumoLane(semaphore.getControlledLanes().listIterator(laneCounter).next());
+					}
+					if (existAdjacent(0 ,-1)){
+						laneCounter ++ ;
+					}
+					if (existAdjacent(-1 ,0)){
+						lane = new SumoLane(semaphore.getControlledLanes().listIterator(laneCounter).next());
 						stopped += getStoppedVehicles(lane);
-							
-						}
-						
-						qLearn1.updateTable(greenTime1, action1, stopped);
 
-						action1 = qLearn1.getAction(greenTime1);
+					}
 
-
-						updateGreenTime(2, action2);
-
-						updateQtable = false;
+					updateQtable = false;
 					}
 				}
 
@@ -165,14 +158,62 @@ public class LearningSemaphore extends Semaphore{
 	}
 
 
-	private void updateGreenTime(int time, int action)
+	private void updateGreenTime(int action)
 	{
 		int timeChange = 5;
+		int time1Mult = 0, time2Mult = 0;//multipler to increase/decrease time
 
-		if(time == 1)
-			greenTime1 += timeChange*action;
-		else if(time == 2)
-			greenTime2 += timeChange*action;	
+		switch (action) {
+		case 0:
+			time1Mult = 1;
+			time2Mult = 1;
+			break;
+		case 1:
+
+			time1Mult = 1;
+			time2Mult = 0;
+			break;
+		case 2:
+
+			time1Mult = 1;
+			time2Mult = -1;
+			break;
+		case 3:
+
+			time1Mult = 0;
+			time2Mult = 1;
+			break;
+		case 4:
+
+			time1Mult = 0;
+			time2Mult = 0;
+			break;
+		case 5:
+
+			time1Mult = 0;
+			time2Mult = -1;
+			break;
+		case 6:
+
+			time1Mult = -1;
+			time2Mult = 1;
+			break;
+		case 7:
+
+			time1Mult = -1;
+			time2Mult = 0;
+			break;
+		case 8:
+
+			time1Mult = -1;
+			time2Mult = -1;
+			break;
+		default:
+			break;
+		}
+		
+		greenTime1 += timeChange*time1Mult;
+		greenTime2 += timeChange*time2Mult;	
 
 	}
 
@@ -247,15 +288,15 @@ public class LearningSemaphore extends Semaphore{
 
 		return Str.toString();
 	}
-private boolean existAdjacent(int x , int y){
-	int column = Integer.parseInt(ID.split("/")[0]);
-	int line = Integer.parseInt(ID.split("/")[1]);
-	String test = Integer.toString(column + x) + "/" + Integer.toString(line + y);
-	if (getAdjacents().contains(test)) {
-		return true;
+	private boolean existAdjacent(int x , int y){
+		int column = Integer.parseInt(ID.split("/")[0]);
+		int line = Integer.parseInt(ID.split("/")[1]);
+		String test = Integer.toString(column + x) + "/" + Integer.toString(line + y);
+		if (getAdjacents().contains(test)) {
+			return true;
+		}
+		return false;
 	}
-	return false;
-}
 }
 
 
