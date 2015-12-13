@@ -15,10 +15,10 @@ public class Semaphore extends Agent{
 	 */
 	private static final long serialVersionUID = 1L;
 	String ID;
-	private HashSet<String> adjacents;
+	public HashSet<String> adjacents;
 	int MAX_WAITING_VEHICLES = 7;
-	
-	
+
+
 
 	public Semaphore(String iD) {
 		ID = iD;
@@ -37,7 +37,7 @@ public class Semaphore extends Agent{
 		adjacents = adjacentSemaphores;
 	}
 
-	
+
 
 	public int getStoppedVehicles(SumoLane lane)
 	{
@@ -46,42 +46,48 @@ public class Semaphore extends Agent{
 		for(int k = 0; k < vehicles.length;k++)
 		{
 			//if(vehicles[k].alive)//may not be alive
+			try{
 				if(vehicles[k].getSpeed() == 0.0)
-					stopped++;
+					stopped++;				
+			}
+			catch(IndexOutOfBoundsException e)
+			{
+				
+			}
 		}
 
 		return stopped;
 	}
 	public int laneCounter(String s){
 		int laneCounter = 0;
-//		UPPER
-			if (existAdjacent(0,1)){
-				if(s.equals("upper"))
-					return laneCounter;
-				laneCounter++;
-			}	
-			//RIGHTER
-			if (existAdjacent(1 ,0)){
-				if(s.equals("righter"))
-					return laneCounter;
-				
-				laneCounter++;
-			}
-			//DOWNER
-			if (existAdjacent(0 ,-1)){
-				if(s.equals("below"))
-					return laneCounter;
-				laneCounter ++ ;
-			}
-			//LEFTER
-			if (existAdjacent(-1 ,0)){
-				if(s.equals("lefter"))
-					return laneCounter;
-			}
-		 return laneCounter;
+		//		UPPER
+		if (existAdjacent(0,1)){
+			if(s.equals("upper"))
+				return laneCounter;
+			laneCounter++;
+		}	
+		//RIGHTER
+		if (existAdjacent(1 ,0)){
+			if(s.equals("righter"))
+				return laneCounter;
+
+			laneCounter++;
+		}
+		//DOWNER
+		if (existAdjacent(0 ,-1)){
+			if(s.equals("below"))
+				return laneCounter;
+			laneCounter ++ ;
+		}
+		//LEFTER
+		if (existAdjacent(-1 ,0)){
+			if(s.equals("lefter"))
+				return laneCounter;
+		}
+		return laneCounter;
 	}
-	
-	
+
+
 	public String generateState(boolean position, boolean yellow) {
 		String Str = "";
 		int column = Integer.parseInt(ID.split("/")[0]);
@@ -136,8 +142,8 @@ public class Semaphore extends Agent{
 
 		return Str.toString();
 	}
-	
-	
+
+
 
 	public boolean existAdjacent(int x , int y){
 		int column = Integer.parseInt(ID.split("/")[0]);
@@ -150,5 +156,5 @@ public class Semaphore extends Agent{
 	}
 
 
-	
+
 }
