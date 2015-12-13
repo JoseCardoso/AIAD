@@ -29,52 +29,48 @@ public class MainMenu extends JFrame {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	static TraSMAPI api;
+	static TraSMAPI api ;
 	static AgentManager manager;
-	static Vector<String> maps = new Vector<String>();
+	static Vector<String>maps = new Vector<String>();
 	static boolean JADE_GUI = true;
 	static jade.core.Runtime rt;
 	private static ProfileImpl profile;
 	static Thread simulationThread;
-	static Thread counterThread;
 	static boolean stop = false;
-	static int timeCounter = 0;
-	static JLabel time;
-
-	public static void main(String[] args) {
+	public  static void main (String[] args){
 		MainMenu menu = new MainMenu();
 		menu.setVisible(true);
 		menu.setResizable(false);
-		menu.setBounds(500, 500, 315, 170);
+		menu.setBounds(500, 500, 315, 150);
 		menu.addWindowListener(new java.awt.event.WindowAdapter() {
-			@SuppressWarnings("deprecation")
+		    @SuppressWarnings("deprecation")
 			@Override
-			public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-				if(stop = false)
-				try {
-					stop = true;
-					if (manager!= null){
-						manager.closeSemaphores();
-					Thread.sleep(250);}// wait for semaphores
-					if(api != null)
-						api.close();
-
-				} catch (UnimplementedMethod | IOException | InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
-				System.exit(0);
-
-			}
+		    public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+		    		
+		    		
+		    	
+						try {
+							stop = true;
+							manager.closeSemaphores();
+							Thread.sleep(250);// wait for semaphores
+							api.close();
+							
+						} catch (UnimplementedMethod | IOException | InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						
+		    	
+		            System.exit(0);
+		            
+		    }
 		});
 	}
-
 	public MainMenu() {
 		maps.add("pequeno");
 		maps.add("medio");
 		maps.add("grande");
-		Vector<String> agentTypes = new Vector<String>();
+		Vector<String>agentTypes = new Vector<String>();
 		agentTypes.add("Normal");
 		agentTypes.add("Message");
 		agentTypes.add("Learning");
@@ -82,8 +78,8 @@ public class MainMenu extends JFrame {
 		getContentPane().setLayout(null);
 
 		JButton btnStart = new JButton("Start");
-		btnStart.setBounds(0, 110, 312, 25);
-
+		btnStart.setBounds(0, 91, 312, 25);
+		
 		getContentPane().add(btnStart);
 
 		JLabel lblMap = new JLabel("Mapa:");
@@ -98,23 +94,19 @@ public class MainMenu extends JFrame {
 		lblAgentType.setBounds(12, 51, 135, 16);
 		getContentPane().add(lblAgentType);
 
-		JComboBox<String> type = new JComboBox<String>(agentTypes);
+		JComboBox<String> type= new JComboBox<String>(agentTypes);
 		type.setBounds(116, 48, 172, 22);
 		getContentPane().add(type);
 		
-		time = new JLabel("Tempo decorrido: " + timeCounter + " sec");
-		time.setBounds(0, 81, 288, 16);
-		getContentPane().add(time);
-
-		btnStart.addActionListener(new ActionListener() {
+		btnStart.addActionListener(new ActionListener(){
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
+				
 				simulationThread = new Thread(new Runnable() {
 					public void run() {
 						try {
-							start(map.getSelectedIndex(), type.getSelectedIndex());
+							start(map.getSelectedIndex(),type.getSelectedIndex());
 						} catch (UnimplementedMethod | InterruptedException | IOException | TimeoutException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -122,20 +114,13 @@ public class MainMenu extends JFrame {
 					}
 				});
 				simulationThread.start();
-				counterThread = new Thread(new Runnable() {
-					public void run() {
-						System.out.println("aqui");
-						countCars();
-						
-					}
-				});
-				counterThread.start();
-
+				
 			}
-
+			
 		});
-
 	}
+
+
 
 	public static void start(int mapName, int agentType)
 			throws UnimplementedMethod, InterruptedException, IOException, TimeoutException {
@@ -156,7 +141,7 @@ public class MainMenu extends JFrame {
 		// Create SUMO
 		Sumo sumo = new Sumo("guisim");
 		List<String> params = new ArrayList<String>();
-		params.add("-c=maps\\" + maps.get(mapName) + "\\file.sumocfg");
+		params.add("-c=maps\\"+maps.get(mapName)+"\\file.sumocfg");
 		sumo.addParameters(params);
 		sumo.addConnections("127.0.0.1", 8820);
 
@@ -170,40 +155,11 @@ public class MainMenu extends JFrame {
 		manager.initSemaphores(agentType);
 		manager.startSemaphores();
 		api.start();
-
+		
 		while (!stop) {
 			if (!api.simulationStep(0)) {
 				break;
 			}
 		}
-	}
-
-	private void countCars() {
-		while (!stop) {
-			try {
-				Thread.sleep(1000);
-				timeCounter++;
-				time.setText("Tempo decorrido: " + timeCounter + " sec");
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			if (manager.getNumVehicles() == 0) {
-				try {
-					stop = true;
-					manager.closeSemaphores();
-					Thread.sleep(250);// wait for semaphores
-					api.close();
-
-				} catch (UnimplementedMethod | IOException | InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			
-			
-		}
-		
-		
 	}
 }
