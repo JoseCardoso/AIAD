@@ -21,6 +21,10 @@ public class MessageLearnSemaphore extends Semaphore {
 	private Learning qLearn;
 
 	private int action;
+	
+	private int externalMessagesReceived;
+	
+	private int externelStopped;
 
 	public MessageLearnSemaphore(String string) {
 		super(string);
@@ -98,8 +102,10 @@ public class MessageLearnSemaphore extends Semaphore {
 
 					}
 					learnProposal();
-					qLearn.updateTable(greenTime2, action, stopped);
+					qLearn.updateTable(greenTime2, action,(int)( stopped*0.5+ externelStopped*0.5));
 
+					externalMessagesReceived = 0;
+					externelStopped = 0;
 					action = qLearn.getAction(greenTime2);
 					updateGreenTime(action);
 
@@ -232,4 +238,26 @@ public class MessageLearnSemaphore extends Semaphore {
 		}
 	}
 
+	public int getExternalMessagesReceived() {
+		return externalMessagesReceived;
+	}
+
+	public void setExternalMessagesReceived(int externalMessagesReceived) {
+		this.externalMessagesReceived = externalMessagesReceived;
+	}
+
+	public int getExternelStopped() {
+		return externelStopped;
+	}
+
+	public void addExternalStopped(int stopped)
+	{
+		if(externalMessagesReceived < getAdjacents().size())
+			externelStopped += stopped;
+		externalMessagesReceived++;
+	}
+	
+	public void setExternelStopped(int externelStopped) {
+		this.externelStopped = externelStopped;
+	}
 }
