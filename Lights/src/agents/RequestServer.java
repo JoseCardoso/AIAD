@@ -33,7 +33,7 @@ public class RequestServer extends CyclicBehaviour {
 			else if (message.startsWith("NumVehicles")){
 				//System.out.println("recebeu Resposta do Learn" + message);
 				
-				int exStop = Integer.parseInt(message);
+				int exStop = Integer.parseInt(message.split(" ")[1]);
 				((MessageLearnSemaphore) myAgent).addExternalStopped(exStop);		
 				
 			}
