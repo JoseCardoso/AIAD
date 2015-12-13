@@ -213,6 +213,16 @@ public class LearningSemaphore extends Semaphore{
 		
 		greenTime1 += timeChange*time1Mult;
 		greenTime2 += timeChange*time2Mult;	
+		
+		if(greenTime1 < 20)
+			greenTime1 = 20;
+		if(greenTime2 < 20)
+			greenTime2 = 20;
+		if(greenTime1 > 60)
+			greenTime1 = 60;
+		if(greenTime2 > 60)
+			greenTime2 = 60;
+		
 
 	}
 	
