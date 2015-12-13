@@ -49,7 +49,7 @@ public class LearningSemaphore extends Semaphore{
 		SumoTrafficLight semaphore = new SumoTrafficLight(ID);
 		int stopped =0;
 		int i = 0;
-		while (true) {
+		while (!stop) {
 			int laneCounter= 0;
 			// states of all semaphores
 			if (getAdjacents().size() == 4 && position) {

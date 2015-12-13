@@ -18,6 +18,7 @@ public class Semaphore extends Agent{
 	String ID;
 	public HashSet<String> adjacents;
 	int MAX_WAITING_VEHICLES = 7;
+	boolean stop = false;
 
 
 
@@ -188,6 +189,13 @@ public class Semaphore extends Agent{
 			return true;
 		}
 		return false;
+	}
+
+
+
+	public void stop() {
+		stop = true;
+		
 	}
 
 

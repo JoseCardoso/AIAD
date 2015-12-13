@@ -40,7 +40,7 @@ public class MessageSemaphore extends Semaphore {
 		boolean position = true, yellow = false;
 		SumoTrafficLight semaphore = new SumoTrafficLight(ID);
 		tickCounter = 0;
-		while (true) {
+		while (!stop) {
 			// states of all semaphores
 			if (getAdjacents().size() == 4 && position) {
 				if (!yellow)

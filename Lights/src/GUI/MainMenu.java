@@ -15,6 +15,7 @@ import agents.AgentManager;
 import jade.BootProfileImpl;
 import jade.core.ProfileImpl;
 import jade.core.Runtime;
+import jade.wrapper.AgentContainer;
 import jade.wrapper.ContainerController;
 import trasmapi.genAPI.TraSMAPI;
 import trasmapi.genAPI.exceptions.TimeoutException;
@@ -28,22 +29,47 @@ public class MainMenu extends JFrame {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
-	
+	static TraSMAPI api ;
+	static AgentManager manager;
 	static Vector<String>maps = new Vector<String>();
 	static boolean JADE_GUI = true;
+	static jade.core.Runtime rt;
 	private static ProfileImpl profile;
-	private static ContainerController mainContainer;
+	static Thread simulationThread;
+	static boolean stop = false;
 	public  static void main (String[] args){
 		MainMenu menu = new MainMenu();
 		menu.setVisible(true);
 		menu.setResizable(false);
 		menu.setBounds(500, 500, 315, 150);
-		menu.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		menu.addWindowListener(new java.awt.event.WindowAdapter() {
+		    @SuppressWarnings("deprecation")
+			@Override
+		    public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+		    		
+		    		
+		    	
+						try {
+							stop = true;
+							manager.closeSemaphores();
+							Thread.sleep(250);// wait for semaphores
+							api.close();
+							
+						} catch (UnimplementedMethod | IOException | InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						
+		    	
+		            System.exit(0);
+		            
+		    }
+		});
 	}
 	public MainMenu() {
-		maps.add("manhattan3");
-		maps.add("manhattan10");
+		maps.add("pequeno");
+		maps.add("medio");
+		maps.add("grande");
 		Vector<String>agentTypes = new Vector<String>();
 		agentTypes.add("Normal");
 		agentTypes.add("Message");
@@ -77,7 +103,7 @@ public class MainMenu extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
-				Thread thread = new Thread(new Runnable() {
+				simulationThread = new Thread(new Runnable() {
 					public void run() {
 						try {
 							start(map.getSelectedIndex(),type.getSelectedIndex());
@@ -87,7 +113,7 @@ public class MainMenu extends JFrame {
 						}
 					}
 				});
-				thread.start();
+				simulationThread.start();
 				
 			}
 			
@@ -107,11 +133,11 @@ public class MainMenu extends JFrame {
 			profile = new ProfileImpl();
 		}
 
-		jade.core.Runtime rt = Runtime.instance();
-		mainContainer = rt.createMainContainer(profile);
+		rt = Runtime.instance();
+		ContainerController mainContainer = rt.createMainContainer(profile);
 
 		// Init TraSMAPI framework
-		TraSMAPI api = new TraSMAPI();
+		api = new TraSMAPI();
 		// Create SUMO
 		Sumo sumo = new Sumo("guisim");
 		List<String> params = new ArrayList<String>();
@@ -125,12 +151,12 @@ public class MainMenu extends JFrame {
 		// Launch and Connect all the simulators added
 		api.launch();
 		api.connect();
-		AgentManager manager = new AgentManager(sumo, mainContainer);
+		manager = new AgentManager(sumo, mainContainer);
 		manager.initSemaphores(agentType);
 		manager.startSemaphores();
 		api.start();
 		
-		while (true) {
+		while (!stop) {
 			if (!api.simulationStep(0)) {
 				break;
 			}

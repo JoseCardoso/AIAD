@@ -18,7 +18,11 @@ public class AgentManager {
 		this.sumo = sumo;
 		this.mainContainer = mainContainer;
 	}
-
+	public void closeSemaphores(){
+		for(Semaphore a : agents){
+			a.stop();
+		}
+	}
 	public void initSemaphores(int agentType) {
 		ArrayList<String> semaphoreIDS = SumoTrafficLight.getIdList();
 		for (int i = 0; i < semaphoreIDS.size(); i++) {
