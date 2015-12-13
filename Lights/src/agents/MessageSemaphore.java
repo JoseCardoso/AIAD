@@ -67,7 +67,7 @@ public class MessageSemaphore extends Semaphore {
 					sentGreenProposal = false;
 				} else if (tickCounter > 45) {
 					yellow = true;
-					
+
 					if(!sentGreenProposal)
 					{
 						greenProposal(semaphore, position);
@@ -79,9 +79,9 @@ public class MessageSemaphore extends Semaphore {
 					yellow = false;
 					sentGreenProposal = false;
 				} else if (tickCounter > 20) {
-					
+
 					yellow = true;
-					
+
 					if(!sentGreenProposal)
 					{
 						greenProposal(semaphore, position);
@@ -107,9 +107,9 @@ public class MessageSemaphore extends Semaphore {
 
 		}
 	}
-	
-	
-	
+
+
+
 	private void greenProposal(SumoTrafficLight semaphore,boolean position)
 	{
 		SumoLane lane;
@@ -118,6 +118,7 @@ public class MessageSemaphore extends Semaphore {
 		int column = Integer.parseInt(ID.split("/")[0]);
 		int line = Integer.parseInt(ID.split("/")[1]);
 
+		
 		// UPPER
 		if (existAdjacent(0, 1)) {
 			lane = new SumoLane(semaphore.getControlledLanes().listIterator(laneCounter).next());
@@ -178,9 +179,9 @@ public class MessageSemaphore extends Semaphore {
 			}
 		}
 
-		
+
 	}
-	
+
 
 	private void emergencyEvaluator(SumoTrafficLight semaphore, boolean position) {
 		SumoLane lane;
@@ -267,7 +268,7 @@ public class MessageSemaphore extends Semaphore {
 					tickCounter = 20;
 			}
 			else
-			
+
 		}
 		if (string.equals(righter)) {
 			if (getStoppedVehicles(lane) > MAX_WAITING_VEHICLES)
@@ -282,7 +283,72 @@ public class MessageSemaphore extends Semaphore {
 			if (getStoppedVehicles(lane) > MAX_WAITING_VEHICLES)
 				tickCounter = 45;
 		}
-*/
+		 */
+	}
+
+	public void evaluateGreen(String string) {
+		// TODO Auto-generated method stub
+		int column = Integer.parseInt(ID.split("/")[0]);
+		int line = Integer.parseInt(ID.split("/")[1]);
+		String upper = Integer.toString(column) + "/" + Integer.toString(line + 1);
+		String righter = Integer.toString(column + 1) + "/" + Integer.toString(line);
+		String below = Integer.toString(column) + "/" + Integer.toString(line - 1);
+		String lefter = Integer.toString(column - 1) + "/" + Integer.toString(line);
+
+		SumoLane lane ;
+		SumoTrafficLight semaphore = new SumoTrafficLight(ID);
+
+		int stopped1 = 0, stopped2 = 0;
+		//avaliar situação dos lados
+		if (string.equals(upper) || string.equals(below)) {
+			//Righter			
+			if (existAdjacent(1, 0)) {
+				int laneC = laneCounter("righter");
+				lane = new SumoLane(semaphore.getControlledLanes().listIterator(laneC).next());
+				stopped1 = getStoppedVehicles(lane);
+			}
+			//lefter
+			if (existAdjacent(-1, 0)) {
+				int laneC = laneCounter("righter");
+				lane = new SumoLane(semaphore.getControlledLanes().listIterator(laneC).next());
+				stopped2 = getStoppedVehicles(lane);
+			}
+
+			//nenhum dos lados tems um número excessivo de carros
+			if(stopped1 < MAX_WAITING_VEHICLES && stopped2 < MAX_WAITING_VEHICLES)
+			{
+				if(tickCounter < 20)
+					tickCounter = 0;
+				else
+					tickCounter = 45;
+			}
+
+		}
+		if (string.equals(righter) || string.equals(lefter)) {
+			//upper
+			if (existAdjacent(0,1)) {
+				int laneC = laneCounter("upper");
+				lane = new SumoLane(semaphore.getControlledLanes().listIterator(laneC).next());
+				stopped1 = getStoppedVehicles(lane);
+			}
+			//downer
+			if (existAdjacent(0,-1)) {
+				int laneC = laneCounter("downer");
+				lane = new SumoLane(semaphore.getControlledLanes().listIterator(laneC).next());
+				stopped2 = getStoppedVehicles(lane);
+			}
+
+			//nenhum dos lados tems um número excessivo de carros
+			if(stopped1 < MAX_WAITING_VEHICLES && stopped2 < MAX_WAITING_VEHICLES)
+			{
+				if(tickCounter > 25)
+					tickCounter = 25;
+				else
+					tickCounter = 20;
+			}
+		}
+
+
 	}
 
 }

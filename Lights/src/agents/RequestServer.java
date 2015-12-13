@@ -15,9 +15,10 @@ public class RequestServer extends CyclicBehaviour {
 		ACLMessage msg = myAgent.receive();
 		if (msg != null) {
 			String message = msg.getContent();
-			if(message.startsWith("Red")){
+			if(message.startsWith("Green")){
 				//System.out.println("Too many vehicles waiting");
-				((MessageSemaphore) myAgent).evaluateProposal(message.split(" ")[1]);
+				((MessageSemaphore) myAgent).evaluateGreen(message.split(" ")[1]);
+				
 			}
 			else if(message.equals("Public")){
 				System.out.println("Public Vehicle Waiting");
