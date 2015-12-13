@@ -12,10 +12,6 @@ public class LearningSemaphore extends Semaphore{
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
-
-	String ID;
-	private HashSet<String> adjacents;
 
 	private int greenTime1, greenTime2, yellowTime;
 
@@ -31,7 +27,7 @@ public class LearningSemaphore extends Semaphore{
 		qLearn = new Learning();
 
 		//assumindo que se manteve no início
-		action = -1;
+		action = 0;
 	}
 
 	public void setup() {
@@ -164,8 +160,8 @@ public class LearningSemaphore extends Semaphore{
 
 		switch (action) {
 		case 0:
-			time1Mult = 1;
-			time2Mult = 1;
+			time1Mult = 0;
+			time2Mult = 0;
 			break;
 		case 1:
 
@@ -184,8 +180,8 @@ public class LearningSemaphore extends Semaphore{
 			break;
 		case 4:
 
-			time1Mult = 0;
-			time2Mult = 0;
+			time1Mult = 1;
+			time2Mult = 1;
 			break;
 		case 5:
 

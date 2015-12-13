@@ -55,12 +55,12 @@ public class Learning {
 
 	}
 
-	public void updateTable(int state, int action, int stoppedCars)
+	public void updateTable(int outState, int action, int stoppedCars)
 	{
 		//stopped cars are bad
 		int reforce = 100-stoppedCars;
 		double quality = 0.0;
-
+		int state = (outState-20)/5;
 
 		quality = qTable[state][action];
 
