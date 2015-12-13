@@ -181,7 +181,7 @@ public class MainMenu extends JFrame {
 	private void countCars() {
 		while (!stop) {
 			try {
-				counterThread.sleep(1000);
+				Thread.sleep(1000);
 				timeCounter++;
 				time.setText("Tempo decorrido: " + timeCounter + " sec");
 			} catch (InterruptedException e) {
