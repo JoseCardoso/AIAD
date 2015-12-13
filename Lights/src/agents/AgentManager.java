@@ -35,7 +35,7 @@ public class AgentManager {
 			}
 			Semaphore agent;
 			if(learning)
-				agent = new LearningSemaphore( semaphoreIDS.get(i));
+				agent = new MessageLearnSemaphore( semaphoreIDS.get(i));
 			else
 				agent = new MessageSemaphore( semaphoreIDS.get(i));
 			

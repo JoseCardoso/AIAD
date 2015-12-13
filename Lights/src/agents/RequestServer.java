@@ -1,5 +1,9 @@
 package agents;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+
+import jade.core.AID;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 
@@ -20,7 +24,14 @@ public class RequestServer extends CyclicBehaviour {
 				
 			}
 			else if (message.startsWith("Learn")){
-				System.out.println("recebeu Learn");
+				//System.out.println("recebeu Learn");
+				ACLMessage response = msg.createReply();
+				response.setContent("NumVehicles "+ ((Semaphore) myAgent).getStoppedVehicles());
+				response.setPerformative(ACLMessage.INFORM);
+				myAgent.send(response);
+			}
+			else if (message.startsWith("NumVehicles")){
+				System.out.println("recebeu Resposta do Learn" + message);
 				
 			}
 

@@ -15,8 +15,6 @@ public class MessageLearnSemaphore extends Semaphore {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	String ID;
-	private HashSet<String> adjacents;
 
 	private int greenTime1, greenTime2, yellowTime;
 
@@ -32,7 +30,7 @@ public class MessageLearnSemaphore extends Semaphore {
 		qLearn = new Learning();
 
 		// assumindo que se manteve no início
-		action = -1;
+		action = 0;
 	}
 
 	public void setup() {
@@ -43,8 +41,6 @@ public class MessageLearnSemaphore extends Semaphore {
 			}
 		});
 		thread.start();
-		// esta funo inicializa o semaforo
-		// System.out.println("SEMAFORO INICIALIZADO " + ID);
 	}
 
 	public HashSet<String> getAdjacents() {
@@ -101,7 +97,7 @@ public class MessageLearnSemaphore extends Semaphore {
 						stopped += getStoppedVehicles(lane);
 
 					}
-
+					learnProposal();
 					qLearn.updateTable(greenTime2, action, stopped);
 
 					action = qLearn.getAction(greenTime2);
@@ -163,7 +159,7 @@ public class MessageLearnSemaphore extends Semaphore {
 		int time1Mult = 0, time2Mult = 0;// multipler to increase/decrease time
 
 		switch (action) {
-		case 0:
+		case 4:
 			time1Mult = 1;
 			time2Mult = 1;
 			break;
@@ -182,7 +178,7 @@ public class MessageLearnSemaphore extends Semaphore {
 			time1Mult = 0;
 			time2Mult = 1;
 			break;
-		case 4:
+		case 0:
 
 			time1Mult = 0;
 			time2Mult = 0;
@@ -225,12 +221,11 @@ public class MessageLearnSemaphore extends Semaphore {
 
 	}
 
-	private void learnProposal(SumoTrafficLight semaphore, boolean position) {
+	private void learnProposal() {
 
 
 		ACLMessage msg = new ACLMessage(ACLMessage.QUERY_REF);
 		msg.setContent("Learn");
-		
 		for (String adjacent : adjacents ){
 		msg.addReceiver(new AID("Semaphore-"+adjacent, AID.ISLOCALNAME));
 		send(msg);

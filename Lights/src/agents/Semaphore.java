@@ -6,6 +6,7 @@ import jade.core.AID;
 import jade.core.Agent;
 import jade.lang.acl.ACLMessage;
 import trasmapi.sumo.SumoLane;
+import trasmapi.sumo.SumoTrafficLight;
 import trasmapi.sumo.SumoVehicle;
 
 public class Semaphore extends Agent{
@@ -57,6 +58,40 @@ public class Semaphore extends Agent{
 		}
 
 		return stopped;
+	}
+	public int getStoppedVehicles(){
+		SumoLane lane ;
+		SumoTrafficLight semaphore = new SumoTrafficLight(ID);
+		int stopped = 0;
+		int laneCounter = 0;
+		//avaliar situação dos lados
+	
+			if (existAdjacent(1, 0)) {
+				lane = new SumoLane(semaphore.getControlledLanes().listIterator(laneCounter).next());
+				stopped = +getStoppedVehicles(lane);
+				laneCounter++;
+			}
+			//lefter
+			if (existAdjacent(-1, 0)) {
+				lane = new SumoLane(semaphore.getControlledLanes().listIterator(laneCounter).next());
+				stopped += getStoppedVehicles(lane);
+				laneCounter++;
+			}
+
+			if (existAdjacent(0,1)) {
+				lane = new SumoLane(semaphore.getControlledLanes().listIterator(laneCounter).next());
+				stopped += getStoppedVehicles(lane);
+				laneCounter++;
+			}
+			//downer
+			if (existAdjacent(0,-1)) {
+				lane = new SumoLane(semaphore.getControlledLanes().listIterator(laneCounter).next());
+				stopped += getStoppedVehicles(lane);
+				laneCounter++;
+			}
+
+		return stopped;
+
 	}
 	public int laneCounter(String s){
 		int laneCounter = 0;
