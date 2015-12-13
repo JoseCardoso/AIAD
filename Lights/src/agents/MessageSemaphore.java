@@ -13,6 +13,7 @@ public class MessageSemaphore extends Semaphore {
 	/**
 	 * 
 	 */
+	private boolean sentGreenProposal;
 	int tickCounter = 0;
 
 	public MessageSemaphore(String string) {
@@ -24,6 +25,7 @@ public class MessageSemaphore extends Semaphore {
 		// System.out.println("setup semaforo");
 		addBehaviour(new RequestServer());
 
+		sentGreenProposal = false;
 		Thread thread = new Thread(new Runnable() {
 			public void run() {
 				executeSemaphore();
@@ -62,19 +64,33 @@ public class MessageSemaphore extends Semaphore {
 					tickCounter = 0;
 					position = true;
 					yellow = false;
+					sentGreenProposal = false;
 				} else if (tickCounter > 45) {
 					yellow = true;
+					
+					if(!sentGreenProposal)
+					{
+						greenProposal(semaphore, position);
+						sentGreenProposal = true;
+					}
 				} else if (tickCounter > 25) {
 					position = false;
 
 					yellow = false;
+					sentGreenProposal = false;
 				} else if (tickCounter > 20) {
-
+					
 					yellow = true;
+					
+					if(!sentGreenProposal)
+					{
+						greenProposal(semaphore, position);
+						sentGreenProposal = true;
+					}
 
 				}
 
-				emergencyEvaluator(semaphore, position);
+				//emergencyEvaluator(semaphore, position);
 				/*
 				 * SumoLane lane = new
 				 * SumoLane(semaphore.getControlledLanes().listIterator(0).next(
@@ -91,6 +107,80 @@ public class MessageSemaphore extends Semaphore {
 
 		}
 	}
+	
+	
+	
+	private void greenProposal(SumoTrafficLight semaphore,boolean position)
+	{
+		SumoLane lane;
+		int laneCounter = 0;
+
+		int column = Integer.parseInt(ID.split("/")[0]);
+		int line = Integer.parseInt(ID.split("/")[1]);
+
+		// UPPER
+		if (existAdjacent(0, 1)) {
+			lane = new SumoLane(semaphore.getControlledLanes().listIterator(laneCounter).next());
+
+			if (position) {
+				// EMERGENCY
+				ACLMessage msg = new ACLMessage(ACLMessage.PROPOSE);
+				int newLine = line + 1;
+				msg.setContent("Green " + column + "/" + line);
+				msg.addReceiver(new AID("Semaphore-" + column + "/" + newLine, AID.ISLOCALNAME));
+
+				send(msg);
+
+			}
+			laneCounter++;
+		}
+		// RIGHTER
+		if (existAdjacent(1, 0)) {
+			lane = new SumoLane(semaphore.getControlledLanes().listIterator(laneCounter).next());
+			if (!position) {
+				// EMERGENCY
+
+				ACLMessage msg = new ACLMessage(ACLMessage.PROPOSE);
+				int newCol = column + 1;
+				msg.setContent("Green " + column + "/" + line);
+				msg.addReceiver(new AID("Semaphore-" + newCol + "/" + line, AID.ISLOCALNAME));
+
+				send(msg);
+			}
+			laneCounter++;
+		}
+		// DOWNER
+		if (existAdjacent(0, -1)) {
+			lane = new SumoLane(semaphore.getControlledLanes().listIterator(laneCounter).next());
+			if (position) {
+				// EMERGENCY
+
+				ACLMessage msg = new ACLMessage(ACLMessage.PROPOSE);
+				int newLine = line - 1;
+				msg.setContent("Green " + column + "/" + line);
+				msg.addReceiver(new AID("Semaphore-" + column + "/" + newLine, AID.ISLOCALNAME));
+
+				send(msg);
+			}
+			laneCounter++;
+		}
+		// LEFTER
+		if (existAdjacent(-1, 0)) {
+			lane = new SumoLane(semaphore.getControlledLanes().listIterator(laneCounter).next());
+			if (!position) {
+				// EMERGENCY
+				ACLMessage msg = new ACLMessage(ACLMessage.PROPOSE);
+				int newCol = column - 1;
+				msg.setContent("Green " + column + "/" + line);
+				msg.addReceiver(new AID("Semaphore-" + newCol + "/" + line, AID.ISLOCALNAME));
+
+				send(msg);
+			}
+		}
+
+		
+	}
+	
 
 	private void emergencyEvaluator(SumoTrafficLight semaphore, boolean position) {
 		SumoLane lane;
@@ -162,7 +252,7 @@ public class MessageSemaphore extends Semaphore {
 	}
 
 	public void evaluateProposal(String string) {
-		int column = Integer.parseInt(ID.split("/")[0]);
+		/*int column = Integer.parseInt(ID.split("/")[0]);
 		int line = Integer.parseInt(ID.split("/")[1]);
 		String upper = Integer.toString(column) + "/" + Integer.toString(line + 1);
 		String righter = Integer.toString(column + 1) + "/" + Integer.toString(line);
@@ -192,7 +282,7 @@ public class MessageSemaphore extends Semaphore {
 			if (getStoppedVehicles(lane) > MAX_WAITING_VEHICLES)
 				tickCounter = 45;
 		}
-
+*/
 	}
 
 }
