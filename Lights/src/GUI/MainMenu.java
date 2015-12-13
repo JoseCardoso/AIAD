@@ -2,7 +2,6 @@ package GUI;
 
 import javax.swing.JFrame;
 import javax.swing.JButton;
-import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -40,6 +39,7 @@ public class MainMenu extends JFrame {
 		menu.setVisible(true);
 		menu.setResizable(false);
 		menu.setBounds(500, 500, 315, 150);
+		menu.setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
 	public MainMenu() {
 		maps.add("manhattan3");
@@ -60,7 +60,7 @@ public class MainMenu extends JFrame {
 		lblMap.setBounds(67, 16, 47, 16);
 		getContentPane().add(lblMap);
 
-		JComboBox map = new JComboBox(maps);
+		JComboBox<String> map = new JComboBox<String>(maps);
 		map.setBounds(116, 13, 172, 22);
 		getContentPane().add(map);
 
@@ -68,7 +68,7 @@ public class MainMenu extends JFrame {
 		lblAgentType.setBounds(12, 51, 135, 16);
 		getContentPane().add(lblAgentType);
 
-		JComboBox type= new JComboBox(agentTypes);
+		JComboBox<String> type= new JComboBox<String>(agentTypes);
 		type.setBounds(116, 48, 172, 22);
 		getContentPane().add(type);
 		
@@ -76,12 +76,18 @@ public class MainMenu extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				try {
-					start(map.getSelectedIndex(),type.getSelectedIndex());
-				} catch (UnimplementedMethod | InterruptedException | IOException | TimeoutException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+				
+				Thread thread = new Thread(new Runnable() {
+					public void run() {
+						try {
+							start(map.getSelectedIndex(),type.getSelectedIndex());
+						} catch (UnimplementedMethod | InterruptedException | IOException | TimeoutException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				});
+				thread.start();
 				
 			}
 			
@@ -123,7 +129,7 @@ public class MainMenu extends JFrame {
 		manager.initSemaphores(agentType);
 		manager.startSemaphores();
 		api.start();
-
+		
 		while (true) {
 			if (!api.simulationStep(0)) {
 				break;
