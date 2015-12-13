@@ -71,7 +71,10 @@ public class MessageSemaphore extends Semaphore {
 					yellow = true;
 
 				}
-
+				
+				
+				
+				emergencyEvaluator(semaphore);
 		/*		SumoLane lane = new SumoLane(semaphore.getControlledLanes().listIterator(0).next());
 				if (getStoppedEmergencyVehicles(lane))
 
@@ -85,6 +88,82 @@ public class MessageSemaphore extends Semaphore {
 			// for(int i = 0; i < )
 
 		}
+	}
+	
+	
+	private void emergencyEvaluator(SumoTrafficLight semaphore)
+	{
+		SumoLane lane;
+		int laneCounter = 0;
+		
+		int column = Integer.parseInt(ID.split("/")[0]);
+		int line = Integer.parseInt(ID.split("/")[1]);
+
+		//	UPPER
+		if (existAdjacent(0,1)){
+			lane = new SumoLane(semaphore.getControlledLanes().listIterator(laneCounter).next());
+			if( getStoppedVehicles(lane) > 15)
+			{
+				//EMERGENCY
+				ACLMessage msg = new ACLMessage(ACLMessage.PROPOSE);
+				int newLine = line+1;
+				msg.setContent("Red "+column+"/"+line);
+				msg.addReceiver(new AID("Semaphore-"+column+"/"+newLine, AID.ISLOCALNAME));
+				
+				send(msg);
+								
+				
+			}
+			laneCounter++;
+		}	
+		//RIGHTER
+		if (existAdjacent(1 ,0)){
+			lane = new SumoLane(semaphore.getControlledLanes().listIterator(laneCounter).next());
+			if( getStoppedVehicles(lane) > 15)
+			{
+				//EMERGENCY
+
+				ACLMessage msg = new ACLMessage(ACLMessage.PROPOSE);
+				int newCol = column+1;
+				msg.setContent("Red "+column+"/"+line);
+				msg.addReceiver(new AID("Semaphore-"+newCol+"/"+line, AID.ISLOCALNAME));
+				
+				send(msg);
+			}
+			laneCounter++;
+		}
+		//DOWNER
+		if (existAdjacent(0 ,-1)){
+			lane = new SumoLane(semaphore.getControlledLanes().listIterator(laneCounter).next());
+			if( getStoppedVehicles(lane) > 15)
+			{
+				//EMERGENCY
+
+				ACLMessage msg = new ACLMessage(ACLMessage.PROPOSE);
+				int newLine = line-1;
+				msg.setContent("Red "+column+"/"+line);
+				msg.addReceiver(new AID("Semaphore-"+column+"/"+newLine, AID.ISLOCALNAME));
+				
+				send(msg);
+			}
+			laneCounter ++ ;
+		}
+		//LEFTER
+		if (existAdjacent(-1 ,0)){
+			lane = new SumoLane(semaphore.getControlledLanes().listIterator(laneCounter).next());
+			if( getStoppedVehicles(lane) > 15)
+			{
+				//EMERGENCY
+				ACLMessage msg = new ACLMessage(ACLMessage.PROPOSE);
+				int newCol = column-1;
+				msg.setContent("Red "+column+"/"+line);
+				msg.addReceiver(new AID("Semaphore-"+newCol+"/"+line, AID.ISLOCALNAME));
+				
+				send(msg);
+			}
+		}
+		
+		
 	}
 	
 
