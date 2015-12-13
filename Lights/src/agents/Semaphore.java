@@ -2,7 +2,9 @@ package agents;
 
 import java.util.HashSet;
 
+import jade.core.AID;
 import jade.core.Agent;
+import jade.lang.acl.ACLMessage;
 import trasmapi.sumo.SumoLane;
 import trasmapi.sumo.SumoVehicle;
 
@@ -14,7 +16,7 @@ public class Semaphore extends Agent{
 	private static final long serialVersionUID = 1L;
 	String ID;
 	private HashSet<String> adjacents;
-
+	int MAX_WAITING_VEHICLES = 7;
 	
 	
 
@@ -41,18 +43,43 @@ public class Semaphore extends Agent{
 	{
 		SumoVehicle[] vehicles = lane.vehiclesList();
 		int stopped = 0;
-
 		for(int k = 0; k < vehicles.length;k++)
 		{
-			if(vehicles[k].alive)//may not be alive
+			//if(vehicles[k].alive)//may not be alive
 				if(vehicles[k].getSpeed() == 0.0)
 					stopped++;
 		}
 
-
 		return stopped;
 	}
-	
+	public int laneCounter(String s){
+		int laneCounter = 0;
+//		UPPER
+			if (existAdjacent(0,1)){
+				if(s.equals("upper"))
+					return laneCounter;
+				laneCounter++;
+			}	
+			//RIGHTER
+			if (existAdjacent(1 ,0)){
+				if(s.equals("righter"))
+					return laneCounter;
+				
+				laneCounter++;
+			}
+			//DOWNER
+			if (existAdjacent(0 ,-1)){
+				if(s.equals("below"))
+					return laneCounter;
+				laneCounter ++ ;
+			}
+			//LEFTER
+			if (existAdjacent(-1 ,0)){
+				if(s.equals("lefter"))
+					return laneCounter;
+			}
+		 return laneCounter;
+	}
 	
 	
 	public String generateState(boolean position, boolean yellow) {
