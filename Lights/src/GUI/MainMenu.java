@@ -51,7 +51,7 @@ public class MainMenu extends JFrame {
 					stop = true;
 					if (manager != null)
 						manager.closeSemaphores();
-					Thread.sleep(250);// wait for semaphores
+					simulationThread.sleep(300);// wait for semaphores
 					if (api != null)
 						api.close();
 
