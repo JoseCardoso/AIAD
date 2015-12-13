@@ -16,12 +16,12 @@ public class RequestServer extends CyclicBehaviour {
 		if (msg != null) {
 			String message = msg.getContent();
 			if(message.startsWith("Green")){
-				//System.out.println("Too many vehicles waiting");
 				((MessageSemaphore) myAgent).evaluateGreen(message.split(" ")[1]);
 				
 			}
-			else if(message.equals("Public")){
-				System.out.println("Public Vehicle Waiting");
+			else if (message.startsWith("Learn")){
+				System.out.println("recebeu Learn");
+				
 			}
 
 		}
