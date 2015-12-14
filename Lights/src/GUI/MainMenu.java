@@ -7,6 +7,8 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.Vector;
 
 import javax.swing.JLabel;
@@ -36,12 +38,15 @@ public class MainMenu extends JFrame {
 	private static ProfileImpl profile;
 	static Thread simulationThread;
 	static boolean stop = false;
+	static int timerCounter = 0;
+	static JLabel time;
+	Timer timer;
 
 	public static void main(String[] args) {
 		MainMenu menu = new MainMenu();
 		menu.setVisible(true);
 		menu.setResizable(false);
-		menu.setBounds(500, 500, 315, 150);
+		menu.setBounds(500, 500, 315, 180);
 		menu.addWindowListener(new java.awt.event.WindowAdapter() {
 			@SuppressWarnings("deprecation")
 			@Override
@@ -78,7 +83,7 @@ public class MainMenu extends JFrame {
 		getContentPane().setLayout(null);
 
 		JButton btnStart = new JButton("Start");
-		btnStart.setBounds(0, 91, 312, 25);
+		btnStart.setBounds(0, 116, 312, 25);
 
 		getContentPane().add(btnStart);
 
@@ -98,6 +103,10 @@ public class MainMenu extends JFrame {
 		type.setBounds(116, 48, 172, 22);
 		getContentPane().add(type);
 
+		time = new JLabel("Tempo decorrido : " + timerCounter);
+		time.setBounds(0, 80, 263, 16);
+		getContentPane().add(time);
+
 		btnStart.addActionListener(new ActionListener() {
 
 			@Override
@@ -114,9 +123,18 @@ public class MainMenu extends JFrame {
 					}
 				});
 				simulationThread.start();
+				TimerTask timerTask = new TimerTask() {
+					public void run() {
+
+						countTime();
+
+					}
+				};
+
+				timer = new Timer();
+				timer.schedule(timerTask, 5000, 1000);
 
 			}
-
 		});
 	}
 
@@ -155,9 +173,33 @@ public class MainMenu extends JFrame {
 		api.start();
 
 		while (!stop) {
+			time.setText("Tempo decorrido : " + timerCounter);
 			if (!api.simulationStep(0)) {
 				break;
 			}
 		}
+	}
+
+	public void countTime() {
+		if (manager.getNumVehicles() > 0){
+			timerCounter++;
+			time.setText("Tempo decorrido : " + timerCounter);}
+		else {
+			
+			try {
+				timer.cancel();
+				stop = true;
+				if (manager != null)
+					manager.closeSemaphores();
+				simulationThread.sleep(300);// wait for semaphores
+				if (api != null)
+					api.close();
+
+			} catch (UnimplementedMethod | IOException | InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
 	}
 }
