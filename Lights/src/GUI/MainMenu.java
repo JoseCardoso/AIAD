@@ -18,6 +18,7 @@ import jade.BootProfileImpl;
 import jade.core.ProfileImpl;
 import jade.core.Runtime;
 import jade.wrapper.ContainerController;
+import jade.wrapper.StaleProxyException;
 import trasmapi.genAPI.TraSMAPI;
 import trasmapi.genAPI.exceptions.TimeoutException;
 import trasmapi.genAPI.exceptions.UnimplementedMethod;
@@ -32,14 +33,15 @@ public class MainMenu extends JFrame {
 	private static final long serialVersionUID = 1L;
 	static TraSMAPI api;
 	static AgentManager manager;
-	static Vector<String> maps = new Vector<String>();
-	static boolean JADE_GUI = true;
-	static jade.core.Runtime rt;
-	private static ProfileImpl profile;
+	Vector<String> maps = new Vector<String>();
+	boolean JADE_GUI = true;
+	jade.core.Runtime rt;
+	private ProfileImpl profile;
 	static Thread simulationThread;
+	ContainerController mainContainer;
 	static boolean stop = false;
-	static int timerCounter = 0;
-	static JLabel time;
+	int timerCounter = 0;
+	JLabel time;
 	Timer timer;
 
 	public static void main(String[] args) {
@@ -57,6 +59,7 @@ public class MainMenu extends JFrame {
 					if (manager != null)
 						manager.closeSemaphores();
 					simulationThread.sleep(300);// wait for semaphores
+
 					if (api != null)
 						api.close();
 
@@ -138,7 +141,7 @@ public class MainMenu extends JFrame {
 		});
 	}
 
-	public static void start(int mapName, int agentType)
+	public void start(int mapName, int agentType)
 			throws UnimplementedMethod, InterruptedException, IOException, TimeoutException {
 
 		if (JADE_GUI) {
@@ -150,7 +153,7 @@ public class MainMenu extends JFrame {
 		}
 
 		rt = Runtime.instance();
-		ContainerController mainContainer = rt.createMainContainer(profile);
+		mainContainer = rt.createMainContainer(profile);
 
 		// Init TraSMAPI framework
 		api = new TraSMAPI();
@@ -181,24 +184,25 @@ public class MainMenu extends JFrame {
 	}
 
 	public void countTime() {
-		if (manager.getNumVehicles() > 0){
+		if (manager.getNumVehicles() > 0) {
 			timerCounter++;
-			time.setText("Tempo decorrido : " + timerCounter);}
-		else {
-			
+			time.setText("Tempo decorrido : " + timerCounter);
+		} else {
+
 			try {
-				timer.cancel();
 				stop = true;
+				
 				if (manager != null)
 					manager.closeSemaphores();
-				simulationThread.sleep(300);// wait for semaphores
+				simulationThread.sleep(300);
+				// wait for semaphores
 				if (api != null)
 					api.close();
 
 			} catch (UnimplementedMethod | IOException | InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
+			} 
 		}
 
 	}
