@@ -72,5 +72,10 @@ public class AgentManager {
 			}
 		}
 	}
-
+	public int getNumVehicles(){
+		int num = 0;
+		for (Semaphore a : agents)
+			num += a.getNumVehicles();
+		return num;
+	}
 }
